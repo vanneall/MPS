@@ -1,6 +1,6 @@
 import topsis
 import saw
-import electre
+import edas
 
 
 criteria = ["Совместимость", "Юзабилити", "Надежность", "Защищенность", "Сопровождаемость", "Мобильность", "Стоимость"]
@@ -16,11 +16,10 @@ matrix = [
     [0.8, 0.69, 0.73, 0.4, 0.75, 0.8, 0.76],  # Защищенность
     [0.98, 0.89, 0.76, 0.64, 0.76, 0.78, 0.6],  # Сопровождаемость
     [0.9, 0.9, 0.7, 0.7, 0.9, 0.9, 0.5],  # Мобильность
-    [0.169, 0.299, 0.159, 0.169, 0.169, 0.369, 0.169]  # Стоимость
+    [0.169, 0.5, 0.159, 0.169, 0.169, 0.169, 0.169]  # Стоимость
 ]
 
-
-choice = int(input("1. TOPSIS\n2. SAW\n3. ELECTRE\n>>> "))
+choice = int(input("1. TOPSIS\n2. SAW\n3. EDAS\n>>> "))
 if choice == 1:
     matrixWithCriteriaWeight = topsis.createMatrixWithCriteriaWeight(criteria, suppliers, matrix, criteriaWeight)
     positive, negative = topsis.findPositiveAndNegativeDecision(matrixWithCriteriaWeight, criteria)
@@ -40,13 +39,9 @@ elif choice == 2:
     for i in P:
         print(f'{i:.5}', end=" | ")
 elif choice == 3:
-    ls = electre.createSetOfSuperiority(matrix, len(suppliers))
-    for i in ls:
-        for j in i:
-            print(j, end="\n")
-        print()
-    lsP, lsN, lsE = electre.createSumOfWeightsOfCriteria(ls, suppliers, criteriaWeight)
-    for i in lsP:
+    avrgScore = edas.getAvarageScoreFromCriteria(matrix)
+    newMatrix = edas.getPositiveMatrix(matrix, avrgScore, criteriaWeight)
+    for i in newMatrix:
         for j in i:
             print(j, end=" ")
         print()
