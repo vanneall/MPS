@@ -30,14 +30,28 @@ def getResult(criteriaMatrix: list, avrgScore: list, criteriaWeight: list):
     positiveMatrix = getPositiveMatrix(criteriaMatrix, avrgScore, criteriaWeight)
     negativeMatrix = getNegativeMatrix(criteriaMatrix, avrgScore, criteriaWeight)
     result = [[]]
-    for criteria in positiveMatrix:
+    for company in range(len(positiveMatrix[0])):
         sum = 0
-        for company in range(len(criteria)):
-            sum += criteria[company]
+        for criteria in range(len(positiveMatrix)):
+            sum += positiveMatrix[criteria][company]
         result[0].append(sum)
     result.append([])
-    for criteria in negativeMatrix:
+
+    for company in range(len(negativeMatrix[0])):
         sum = 0
-        for company in range(len(criteria)):
-            sum += criteria[company]
+        for criteria in range(len(negativeMatrix)):
+            sum += negativeMatrix[criteria][company]
         result[1].append(sum)
+
+    result.append([])
+    for i in result[0]:
+        result[2].append(i/max(result[0]))
+
+    result.append([])
+    for i in result[1]:
+        result[3].append(1 - i / max(result[1]))
+
+    result.append([])
+    for i in range(len(result[2])):
+        result[4].append(0.5 * (result[2][i] + result[3][i]))
+    return result[4]
